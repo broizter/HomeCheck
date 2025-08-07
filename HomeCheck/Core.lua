@@ -151,6 +151,11 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
             self:getGroup(i)
         end
 
+        -- Initialize test mode if it was enabled
+        if self.db.global.testMode then
+            self:setTestMode(true)
+        end
+
         self.db.RegisterCallback(self, "OnProfileChanged", "loadProfile")
         self.db.RegisterCallback(self, "OnProfileCopied", "loadProfile")
         self.db.RegisterCallback(self, "OnProfileReset", "loadProfile")
