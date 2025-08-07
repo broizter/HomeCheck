@@ -125,6 +125,11 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
         self:ScheduleTimer(function()
             self:updateRaidCooldowns()
         end, 30)
+
+        -- Initialize test mode if it was enabled
+        if self.db.global.testMode then
+            self:setTestMode(true)
+        end
     elseif event == "ADDON_LOADED" then
         if (...) ~= "HomeCheck" then
             return
@@ -149,11 +154,6 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
 
         for i = 1, groups do
             self:getGroup(i)
-        end
-
-        -- Initialize test mode if it was enabled
-        if self.db.global.testMode then
-            self:setTestMode(true)
         end
 
         self.db.RegisterCallback(self, "OnProfileChanged", "loadProfile")
