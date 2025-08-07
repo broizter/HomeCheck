@@ -153,7 +153,6 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
 
         -- Initialize test mode if it was enabled
         if self.db.global.testMode then
-            self.db.global.testMode = false -- Reset first
             self:setTestMode(true)
         end
 
@@ -1206,8 +1205,10 @@ function HomeCheck:UnitHasGlyph(unit, glyphID, default)
     end
     local a, b, c, d, e, f = self.LibGroupTalents:GetUnitGlyphs(unit)
     if a or b or c or d or e or f then
+        -- checking if any glyph info exists to make sure glyph info was actually fetched
         return false
     end
+    -- assume player has glyph if glyph info is empty and default=true
     return true
 end
 
@@ -1271,17 +1272,10 @@ function HomeCheck:updateFramesVisibility(groupIndex)
     end
 end
 
--- Test Mode functionality
-
 function HomeCheck:setTestMode(enable)
+    self.db.global.testMode = enable
     if enable then
-        if self.db.global.testMode then
-            return -- Already in test mode
-        end
-
-        self.db.global.testMode = true
-
-        for spellId, spell in pairs(self.db.profile.spells) do
+        for spellId, _ in pairs(self.db.profile.spells) do
             if self.spells[spellId] then
                 -- Create test cooldown with varying times
                 local testCDLeft = random(1, 5) * 10
@@ -1289,12 +1283,6 @@ function HomeCheck:setTestMode(enable)
             end
         end
     else
-        if not self.db.global.testMode then
-            return -- Not in test mode
-        end
-
-        self.db.global.testMode = false
-
         -- Remove all test frames
         self:removeCooldownFrames(nil, nil, nil, nil, nil, true)
     end
