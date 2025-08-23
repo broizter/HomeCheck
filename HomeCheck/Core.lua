@@ -12,7 +12,7 @@ HomeCheck.groups = {}
 HomeCheck.localizedSpellNames = {}
 HomeCheck.deadUnits = {}
 HomeCheck.RebirthTargets = {}
-HomeCheck.db_ver = 5
+HomeCheck.db_ver = 4
 
 HomeCheck.comms = {
     oRA = "oRA",
