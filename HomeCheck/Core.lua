@@ -214,6 +214,16 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
             end, 0.5)
         end
         end)
+        if IsAddOnLoaded("DBM-Core") then
+        self:ScheduleTimer(function()
+        if DBM and DBM.RegisterCallback then
+            DBM:RegisterCallback("kill", function(mod)
+                HomeCheck:ResetAllCooldowns()
+            end)
+            print("|cff00ff00[HomeCheck]|r Hooked into DBM for boss kill detection")
+        end
+    end, 1)
+end
     end
 end)
 
