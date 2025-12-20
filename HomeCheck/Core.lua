@@ -1323,15 +1323,24 @@ end
 
 function HomeCheck:ResetAllCooldowns()
     print("|cff00ff00[HomeCheck]|r Resetting all raid cooldowns...")
+    
+    local framesToReset = {}
 
     for i = 1, #self.groups do
-        for j = #self.groups[i].CooldownFrames, 1, -1 do
+        for j = 1, #self.groups[i].CooldownFrames do
             local frame = self.groups[i].CooldownFrames[j]
             if frame and frame.CDLeft and frame.CDLeft > 0 then
-                if frame.spellID ~= 47883 then
-                    self:setCooldown(frame.spellID, frame.playerName, 0)
+                if frame.spellID ~= 47883 then -- Exclude soulstones
+                    table.insert(framesToReset, {
+                        spellID = frame.spellID,
+                        playerName = frame.playerName
+                    })
                 end
             end
         end
+    end
+
+    for i = 1, #framesToReset do
+        self:setCooldown(framesToReset[i].spellID, framesToReset[i].playerName, 0)
     end
 end
