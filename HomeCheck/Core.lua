@@ -1328,7 +1328,9 @@ function HomeCheck:ResetAllCooldowns()
         for j = #self.groups[i].CooldownFrames, 1, -1 do
             local frame = self.groups[i].CooldownFrames[j]
             if frame and frame.CDLeft and frame.CDLeft > 0 then
-                self:setCooldown(frame.spellID, frame.playerName, 0)
+                if frame.spellID ~= 47883 then
+                    self:setCooldown(frame.spellID, frame.playerName, 0)
+                end
             end
         end
     end
