@@ -6,6 +6,11 @@ HomeCheck.spells = {
         talentTab = 1,
         talentIndex = 25
     },
+    -- Time Warp
+    [80989] = {
+        cd = 300,
+        class = "MAGE",
+    },
     -- DSac
     [64205] = {
         cd = 120,

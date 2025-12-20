@@ -161,7 +161,11 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
         self.db.RegisterCallback(self, "OnProfileReset", "loadProfile")
 
         self:OptionsPanel()
-
+        SLASH_HOMECHECKRESET1 = "/hcreset"
+        SLASH_HOMECHECKRESET2 = "/homecheck reset"
+        SlashCmdList["HOMECHECKRESET"] = function()
+            HomeCheck:ResetAllCooldowns()
+        end
         self:UnregisterEvent("ADDON_LOADED")
         self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         self:RegisterEvent("UNIT_SPELLCAST_SENT")
@@ -196,6 +200,20 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
                 end
             end
         end, 1)
+        local dbmFrame = CreateFrame("Frame")
+        dbmFrame:RegisterEvent("ADDON_LOADED")
+        dbmFrame:SetScript("OnEvent", function(self, event, addon)
+        if addon == "DBM-Core" then
+            HomeCheck:ScheduleTimer(function()
+                if DBM and DBM.RegisterCallback then
+                    DBM:RegisterCallback("kill", function(mod)
+                        HomeCheck:ResetAllCooldowns()
+                    end)
+                    print("|cff00ff00[HomeCheck]|r Hooked into DBM for boss kill detection")
+                end
+            end, 0.5)
+        end
+        end)
     end
 end)
 
@@ -1291,4 +1309,17 @@ function HomeCheck:setTestMode(enable)
     end
 
     self:repositionFrames()
+end
+
+function HomeCheck:ResetAllCooldowns()
+    print("|cff00ff00[HomeCheck]|r Resetting all raid cooldowns...")
+
+    for i = 1, #self.groups do
+        for j = #self.groups[i].CooldownFrames, 1, -1 do
+            local frame = self.groups[i].CooldownFrames[j]
+            if frame and frame.CDLeft and frame.CDLeft > 0 then
+                self:setCooldown(frame.spellID, frame.playerName, 0)
+            end
+        end
+    end
 end
