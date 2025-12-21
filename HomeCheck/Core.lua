@@ -591,17 +591,26 @@ function HomeCheck:EnableMouse(frame, disable)
             if button == "LeftButton" and (IsShiftKeyDown() or IsControlKeyDown()) then
                 local message = frame.playerName .. " " .. (GetSpellLink(frame.spellID))
                 if frame.CDLeft == 0 then
-                    message = message .. " READY"
+                    -- Spell is ready
+                    if IsShiftKeyDown() then
+                        message = message .. " READY"
+                        ChatThrottleLib:SendChatMessage("NORMAL", "HomeCheck", message, playerInRaid and "RAID" or "PARTY")
+                    elseif IsControlKeyDown() then
+                        -- Whisper with different format when ready
+                        message = "Use " .. (GetSpellLink(frame.spellID)) .. " please!"
+                        ChatThrottleLib:SendChatMessage("NORMAL", "HomeCheck", message, "WHISPER", nil, frame.playerName)
+                    end
                 else
+                    -- Spell is on cooldown - keep same format for both
                     if frame.target then
                         message = message .. " (" .. frame.target .. ")"
                     end
                     message = message .. " " .. date("!%M:%S", frame.CDLeft)
-                end
-                if IsShiftKeyDown() then
-                    ChatThrottleLib:SendChatMessage("NORMAL", "HomeCheck", message, playerInRaid and "RAID" or "PARTY")
-                elseif IsControlKeyDown() then
-                    ChatThrottleLib:SendChatMessage("NORMAL", "HomeCheck", message, "WHISPER", nil, frame.playerName)
+                    if IsShiftKeyDown() then
+                        ChatThrottleLib:SendChatMessage("NORMAL", "HomeCheck", message, playerInRaid and "RAID" or "PARTY")
+                    elseif IsControlKeyDown() then
+                        ChatThrottleLib:SendChatMessage("NORMAL", "HomeCheck", message, "WHISPER", nil, frame.playerName)
+                    end
                 end
             end
         end)
