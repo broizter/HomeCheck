@@ -209,7 +209,12 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
                     DBM:RegisterCallback("kill", function(mod)
                         HomeCheck:ResetAllCooldowns()
                     end)
-                    print("|cff00ff00[HomeCheck]|r Hooked into DBM for boss kill detection")
+                    
+                    DBM:RegisterCallback("wipe", function(mod)
+                        HomeCheck:ResetAllCooldowns()
+                    end)
+                    
+                    print("|cff00ff00[HomeCheck]|r Hooked into DBM for boss kill/wipe detection")
                 end
             end, 0.5)
         end
@@ -220,7 +225,11 @@ HomeCheck:SetScript("OnEvent", function(self, event, ...)
             DBM:RegisterCallback("kill", function(mod)
                 HomeCheck:ResetAllCooldowns()
             end)
-            print("|cff00ff00[HomeCheck]|r Hooked into DBM for boss kill detection")
+
+            DBM:RegisterCallback("wipe", function(mod)
+                HomeCheck:ResetAllCooldowns()
+            end)
+            print("|cff00ff00[HomeCheck]|r Hooked into DBM for boss kill/wipe detection")
         end
     end, 1)
 end
